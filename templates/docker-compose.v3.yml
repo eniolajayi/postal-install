@@ -1,17 +1,18 @@
-version: "latest"
 services:
   web:
-    image: ghcr.io/postalserver/postal:{{version}}
+    image: ghcr.io/postalserver/postal:${VERSION}
     command: postal web-server
-    network_mode: host
+    ports:
+      - "5000:5000"
     volumes:
       - /opt/postal/config:/config
     restart: unless-stopped
 
   smtp:
-    image: ghcr.io/postalserver/postal:{{version}}
+    image: ghcr.io/postalserver/postal:${VERSION}
     command: postal smtp-server
-    network_mode: host
+    ports:
+      - "25:25"
     cap_add:
       - NET_BIND_SERVICE
     volumes:
@@ -19,17 +20,16 @@ services:
     restart: unless-stopped
 
   worker:
-    image: ghcr.io/postalserver/postal:{{version}}
+    image: ghcr.io/postalserver/postal:${VERSION}
     command: postal worker
-    network_mode: host
     volumes:
       - /opt/postal/config:/config
     restart: unless-stopped
 
   runner:
     profiles: ["tools"]
-    image: ghcr.io/postalserver/postal:{{version}}
+    image: ghcr.io/postalserver/postal:${VERSION}
     command: postal
-    network_mode: host
     volumes:
       - /opt/postal/config:/config
+    restart: unless-stopped
